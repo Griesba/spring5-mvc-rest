@@ -3,6 +3,7 @@ package guru.springfamework.bootstrap;
 import guru.springfamework.domain.Category;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CategoryRepository;
+import guru.springfamework.repositories.CustomerRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Component;
 public class Bootstrap implements CommandLineRunner{
 
     private CategoryRepository categoryRepository;
+    private final CustomerRepository customerRepository;
 
-    public Bootstrap(CategoryRepository categoryRepository) {
+    public Bootstrap(CategoryRepository categoryRepository, CustomerRepository customerRepository) {
         this.categoryRepository = categoryRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -32,16 +35,19 @@ public class Bootstrap implements CommandLineRunner{
         onana.setFirstName("Onana");
         onana.setLastName("as2");
         onana.setId(12L);
+        customerRepository.save(onana);
 
         Customer gassame = new Customer();
         gassame.setFirstName("Gassame");
         gassame.setLastName("as3");
         gassame.setId(13L);
+        customerRepository.save(gassame);
 
         Customer mamadou = new Customer();
         mamadou.setFirstName("Mamadou");
         mamadou.setLastName("as4");
         mamadou.setId(14L);
+        customerRepository.save(mamadou);
     }
 
     private void createCategories() {

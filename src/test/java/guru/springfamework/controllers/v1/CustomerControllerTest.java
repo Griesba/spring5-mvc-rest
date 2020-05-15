@@ -21,8 +21,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,5 +86,23 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName", equalTo("Basile")))
                 .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/")));
+    }
+
+    @Test
+    public void testUpdateCustomer() throws Exception {
+        CustomerDTO dodo = new CustomerDTO();
+        dodo.setFirstName("dodo");
+        dodo.setId(3l);
+
+        when(customerService.updateCustomer(anyLong(), ArgumentMatchers.any(CustomerDTO.class))).thenReturn(dodo);
+
+        mockMvc.perform(put("/api/v1/customers/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(dodo)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", equalTo("dodo")));
+
+
+
     }
 }
