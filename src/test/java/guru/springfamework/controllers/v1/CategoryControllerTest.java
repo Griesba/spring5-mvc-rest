@@ -1,6 +1,7 @@
 package guru.springfamework.controllers.v1;
 
 import guru.springfamework.api.v1.model.CategoryDTO;
+import guru.springfamework.controllers.RestResponseEntityExceptionHandler;
 import guru.springfamework.services.CategoryService;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,18 +39,20 @@ public class CategoryControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
 
     }
 
     @Test
     public void testListCategories() throws Exception {
         CategoryDTO category1 = new CategoryDTO();
-        category1.setId(1l);
+        category1.setId(1L);
         category1.setName(NAME);
 
         CategoryDTO category2 = new CategoryDTO();
-        category2.setId(2l);
+        category2.setId(2L);
         category2.setName("Bob");
 
         List<CategoryDTO> categories = Arrays.asList(category1, category2);
@@ -65,7 +68,7 @@ public class CategoryControllerTest {
     @Test
     public void testGetByNameCategories() throws Exception {
         CategoryDTO category1 = new CategoryDTO();
-        category1.setId(1l);
+        category1.setId(1L);
         category1.setName(NAME);
 
         when(categoryService.getCategoryByName(anyString())).thenReturn(category1);

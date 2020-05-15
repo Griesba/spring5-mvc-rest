@@ -1,6 +1,7 @@
 package guru.springfamework.controllers.v1;
 
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.RestResponseEntityExceptionHandler;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.services.CustomerService;
 import org.junit.Before;
@@ -37,7 +38,9 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
     }
 
     @Test
@@ -74,7 +77,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
     @Test
     public void testCreateCustomer() throws Exception {
         CustomerDTO basil = new CustomerDTO();
-        basil.setId(2l);
+        basil.setId(2L);
         basil.setFirstName("Basile");
         basil.setCustomerUrl("/api/v1/customers/");
 
@@ -92,7 +95,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
     public void testUpdateCustomer() throws Exception {
         CustomerDTO dodo = new CustomerDTO();
         dodo.setFirstName("dodo");
-        dodo.setId(3l);
+        dodo.setId(3L);
 
         when(customerService.updateCustomer(anyLong(), ArgumentMatchers.any(CustomerDTO.class))).thenReturn(dodo);
 
@@ -102,7 +105,13 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo("dodo")));
 
-
-
     }
+
+    @Test
+    public void testDeleteCustomer() throws Exception {
+        mockMvc.perform(delete("/api/v1/customers/" + anyLong())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

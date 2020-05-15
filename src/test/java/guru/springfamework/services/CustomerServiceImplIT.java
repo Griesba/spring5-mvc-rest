@@ -3,6 +3,7 @@ package guru.springfamework.services;
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
 import guru.springfamework.bootstrap.Bootstrap;
+import guru.springfamework.controllers.ResourceNotFoundException;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CategoryRepository;
 import guru.springfamework.repositories.CustomerRepository;
@@ -18,6 +19,9 @@ import java.util.List;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest// this brings up repository in the context for testing
@@ -42,7 +46,7 @@ public class CustomerServiceImplIT {
     }
 
     @Test
-    public void testPatchFirstName() {
+    public void testPatchFirstName() throws ResourceNotFoundException {
         Long id = getCustomerIdValue();
 
         CustomerDTO momo = new CustomerDTO();
@@ -61,7 +65,7 @@ public class CustomerServiceImplIT {
     }
 
     @Test
-    public void patchCustomerUpdateLastName() throws Exception {
+    public void patchCustomerUpdateLastName() {
         String updatedName = "UpdatedName";
         long id = getCustomerIdValue();
 
@@ -77,12 +81,21 @@ public class CustomerServiceImplIT {
 
         customerService.patchCustomer(id, customerDTO);
 
-        Customer updatedCustomer = customerRepository.findById(id).get();
+        Customer updatedCustomer = customerRepository.findById(id).orElse(null);
 
         assertNotNull(updatedCustomer);
         assertEquals(updatedName, updatedCustomer.getLastName());
         assertThat(originalFirstName, equalTo(updatedCustomer.getFirstName()));
         assertThat(originalLastName, not(equalTo(updatedCustomer.getLastName())));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testDeleteCustomer() {
+        Long id = getCustomerIdValue();
+        customerService.deleteCustomerById(id);
+
+        customerService.findById(id);
+        verify(customerRepository, times(1)).deleteById(anyLong());
     }
 
     private Long getCustomerIdValue(){

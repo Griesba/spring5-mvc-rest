@@ -2,16 +2,14 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.ResourceNotFoundException;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -36,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO findById(Long id) {
         return customerRepository.findById(id)
                 .map(customerMapper::customerToCustomerDTO)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -53,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO updateCustomer(long anyLong, CustomerDTO customerDTO) {
         if (customerRepository.findById(anyLong) == null) {
-            throw new RuntimeException("Error: No such customer");
+            throw new ResourceNotFoundException();
         }
         Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
         customer.setId(anyLong);
@@ -70,6 +68,11 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setLastName(customerDTO.getLastName());
             }
             return saveCustomer(customer);
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    public void deleteCustomerById(Long id) {
+        customerRepository.deleteById(id);
     }
 }
