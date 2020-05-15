@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping(CustomerController.CUSTOMERS_BASE_URL)
 public class CustomerController {
 
-    public static final String CUSTOMERS_BASE_URL = "/api/v1/customers";
+    static final String CUSTOMERS_BASE_URL = "/api/v1/customers";
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -21,8 +21,9 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerListDTO> getCustomers(){
-        return new ResponseEntity<>(new CustomerListDTO(customerService.findAll()), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerListDTO getCustomers(){
+        return new CustomerListDTO(customerService.findAll());
     }
 
     @GetMapping("/{id}")

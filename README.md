@@ -9,3 +9,5 @@ This small app try to implements rest service to consume end-points from
 https://api.predic8.de/shop/docs#!/categories
 
 - @DataJpaTest// this brings up repository in the context for testing
+
+- Use @RestController in spring 5  and remove @ResponseBody form method return type
