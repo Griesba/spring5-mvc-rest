@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Api("Vendor Controller API")
 @RestController
-@RequestMapping(VendorController.VENDORS_URL)
+@RequestMapping(VendorController.BASE_URL)
 public class VendorController {
 
-    public static final String VENDORS_URL = "/api/v1/vendors";
+    public static final String BASE_URL = "/api/v1/vendors";
     private final VendorService vendorService;
 
     public VendorController(VendorService vendorService) {
@@ -32,6 +32,12 @@ public class VendorController {
     @ResponseStatus(HttpStatus.CREATED)
     public VendorDTO createVendor(VendorDTO vendorDTO){
         return vendorService.createVendor(vendorDTO);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public VendorDTO patchVendor(@PathVariable Long id, VendorDTO vendorDTO){
+        return vendorService.patchVendor(id, vendorDTO);
     }
 
 
