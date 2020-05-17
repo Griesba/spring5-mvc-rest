@@ -13,4 +13,6 @@ https://api.predic8.de/shop/docs#!/categories
 - Use @RestController in spring 5  and remove @ResponseBody form method return type
 
 
-- https://editor.swagger.io/ can be used to generate brand new project with documented api mased on the configuration privided in http://localhost:8080/v2/api-docs. Copy the content of that config and paste it in the text editor of swagger then download de server code in <<Generated Server>> area 
+- https://editor.swagger.io/ can be used to generate brand new project with documented api missed on the configuration privided in http://localhost:8080/v2/api-docs. Copy the content of that config and paste it in the text editor of swagger then download de server code in <<Generated Server>> area.
+- Adding management of  Accept:application/xml and Content-Type:application/xml in Rest request.
+    dependency config woodstox-core-asl is not anymore part of spring boot repository.   
